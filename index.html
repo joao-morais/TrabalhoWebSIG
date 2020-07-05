@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>João Morais, nº3974</title>
+
+	<!-- Servidor leaflet-->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""></link>
+
+        <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+	
+	<!-- Dados -->
+        <script type="text/javascript" src="./dados_geojson/COVID_CONC_fn.geojson"></script>
+
+	<!-- Estilos em CSS para diversas partes -->
+        <style>
+			.legend {
+              padding: 6px 8px;
+              line-height: 18px;
+              background: rgba(255,255,255,0.9);
+              box-shadow: 0 0 15px rgba(0,0,0,0.2);
+              border-radius: 5px;
+          }
+           .legend i {
+              width: 18px;
+              height: 18px;
+              float: left;
+              margin-right: 8px;
+              opacity: 0.7;
+          }
+		  .cabecalho{
+			height: 140px;
+			width: 100%;
+			border: 3px outset black;
+			background-color: #F0F0F0;
+			text-align: center;
+			cellpadding: 0px;
+			cellspacing: 0px;
+			frame: border;
+			rules: none;
+			}
+		.posicaotext {
+			vertical-align:top;
+			}
+		.posicaomap {
+			border: 2px solid black;
+			border-collapse: collapse;
+			}
+		.indent_text { 
+			text-indent: 3%;
+		}
+		.background {
+			background-size: cover;
+			background-image: url('./imagens/background.png');
+		}	
+		.text {
+			text-align: justify;
+			text-justify: inter-word;
+		}
+        </style>
+
+    </head>
+
+    <body class="background">
+		
+		
+		
+	<!--Cabeçalho-->
+		<table class="cabecalho">
+			<tr>
+				<td align="center" width="20%"> <IMG src="./imagens/igot.png" height="50" width="200"></td>
+				<td align="center" width="60%"> 
+					<H2>Mestrado de SIG e Modelação Territorial Aplicado ao Ordenamento
+					<H3>WebSIG
+					<H5>2019/2020</td>
+				<td align="center" width="20%"> <IMG src="./imagens/ulisboa.png" height="75" width="200"></td>
+			</tr>
+		</table>
+		
+	<!-- Pequeno espaço para separar cabeçalho do resto -->	
+		<table height="10"></table>
+		
+	<!--Identificação-->
+		<div class="indent_text" style ="height:25px">
+			<B>Docente:</B> Nelson Mileu
+		</div>
+		<div class="indent_text" style ="height:25px">
+			<B>Discente:</B> João Morais, nº3974
+		</div>
+		
+	<!--Texto, Vídeo e Mapa-->
+		<Table width="100%" class="text">
+			<tr>
+				<td width="50%" class="posicaotext">
+					<br>O mapa à direita tem representado, para Portugal Continental, os casos confirmados por 10 mil habitantes, por município, relativamente ao vírus Covid-19 no dia 26 de junho de 2020. 
+					<br>
+					<br> Portugal Continental têm um total de <B>28025</B> casos e;
+					<br>
+					<br> Os três municípios com mais <U>casos por 10 mil habitantes</U> são: 
+						<ul>
+							<li> Ovar </li>
+							<li> Vila Nova de Foz Côa </li>
+							<li> Condeixa-a-Nova </li>
+						</ul>
+						Os três municípios com mais <U>casos totais</U> são: 
+						<ul>
+							<li> Lisboa </li>
+							<li> Vila Nova de Gaia </li>
+							<li> Porto </li>
+						</ul>
+					<div align="center"> <font size="5">Explicação e Funcionalidades do Projeto </font></div>
+					<div align="center">
+						<iframe width="80%" height="300" align="center" src="https://www.youtube.com/embed/tgbNymZ7vqY" allowfullscreen="allowfullscreen">
+						</iframe>
+					</div>
+				</td>
+				
+				<td width="50%" class="posicaomap"> 
+					<div id="mapa" style="height: 650px"></div>
+				</td>
+			</tr>
+		</Table>
+		
+		
+	<!-- Ficheiro para guardar o script -->
+		<br>
+		<div align="center"><a download="Script em txt" href="./Trabalho_Script.txt" > Gravar Script em ficheiro .txt </a></div>
+
+<!-- TO DO para melhorar o projeto: 
+funcionalidades :
+	Escolher entre camadas visíveis, os diferentes dias
+	O top 3 de cada atributo poder variar consoante a camada
+	Identificar no mapa, através de um botao (ativar/desativar), os municípios do top 3
+	-->
+
+
+	<!-- Mapa -->
+        <script type="text/javascript">	
+
+          var map = L.map('mapa', {
+              center: [39.694500, -8.130583], // centroide Portugal continental
+              zoom: 7
+          });
+
+         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+           attribution: 'Map data © OpenStreetMap contributors, CC-BY-SA, Imagery © Mapbox',
+           maxZoom: 10,
+           minZoom: 6,
+           id: 'mapbox.light',
+           accessToken: 'pk.eyJ1IjoiY3VyZW1hbmdvIiwiYSI6ImNpcTQ4cGFwbDAxbmVmd25vZGNiOTVzeGEifQ.GWZByYkIft6eMRha69C8nw'
+         }).addTo(map);
+
+         function getColor(value) {
+            return value > 75  ? '#ff1919':
+                   value > 50  ? '#ff4c4c':
+                   value > 25  ? '#ff7f7f':
+                   value > 10  ? '#ffb2b2':
+                                 '#ffe5e5';
+        }
+
+        function style(feature){
+            return {
+                fillColor: getColor(feature.properties.Casos10hab),   // Atributo: Casos por 10mil habitantes
+                weight: 1,
+                opacity: 1,
+                color: 'gray',
+                fillOpacity: 0.9
+            };
+        }
+            
+        function highlightFeature(e) {
+            // Get access to the feature that was hovered through e.target
+            var feature = e.target;
+			
+            feature.setStyle({ // Estilo
+                weight: 3,
+                color: '#666',
+                fillOpacity: 0.7
+            });
+
+          
+            // Erros nos browsers: IE, Opera or Edge; problems doing bringToFront on mouseover
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                feature.bringToFront();
+            }
+        }
+            
+        var geojson; // definição da variável para fazer o "layer" geojson acessivel para as funções seguintes   
+            
+        function resetHighlight(e) {
+            geojson.resetStyle(e.target);
+        }
+
+            
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+				});
+        }
+
+	 
+        geojson = L.geoJson(data, { // a variável geojson com os dados (data) do ficheiro "COVID_CONC_fn.geojson" 
+            style:style,
+            onEachFeature: onEachFeature
+        }).bindTooltip(function (layer){
+			return '<div style="font-weight:bold;text-align:center">'+ layer.feature.properties.Concelho_1 + '<p></p></div>'
+                   + '<div style="color:saddlebrown;font-weight:bold">' + layer.feature.properties.Pop_Total.toString() + ' <tagname style="font-weight:normal">Habitantes</div>'
+				   + '<div style="color:green;font-weight:bold">' + layer.feature.properties.Confirmado.toString() + ' <tagname style="font-weight:normal">Casos confirmados</div>'
+				   + '<div style="color:red;font-weight:bold">' + layer.feature.properties.Casos10hab.toString() + ' <tagname style="font-weight:normal">Casos por 10mil hab. </div>'
+        }).addTo(map);
+		
+         var legend = L.control({position: 'bottomright'});
+
+          legend.onAdd = function (map) {
+
+              var div = L.DomUtil.create('div', 'legend'),
+                  grades = [0, 10, 25, 50, 75]; // Intervalos ajustados para a legenda
+
+              div.innerHTML = '<b>Casos confirmados <br> por 10 mil habitantes <br> 26/05/2020 <br></b>'; // Titulo da legenda
+
+              
+              // Costumização legenda
+              for (var i = 0; i < grades.length; i++) {
+                  div.innerHTML +=
+                  '<i style="background:' + getColor(grades[i] + 1) + '"></i>' +
+                  grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '-120 <br> <font size="1" > Fonte: DGS, INE' );
+              }
+
+              return div;
+          };
+
+          legend.addTo(map);
+        </script>
+	</body>
+</html>
